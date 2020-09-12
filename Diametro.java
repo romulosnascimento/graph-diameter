@@ -34,18 +34,10 @@ class Diametro {
             String diameterPath = "";
 
 //          Leitura do arquivo de entrada.
-            
+
             IO io = new IO();
      	    String s = io.next();
             int inputPosition = 1;
-
-            //     	IO io = new IO();
-//        while (s != null) {
-//            io.write(s + " ");
-//            s = io.next();
-//        }
-//
-//     	io.flush();
 
 //          Inserção dos valores de entrada na matriz de adjacências e de predecessores.
 
@@ -64,11 +56,6 @@ class Diametro {
                     int w = parseInt(io.next());
                     graph[u][v] = w;
                     graph[v][u] = w;
-                    if (graph[u][v] > diameter) {
-                        diameter = graph[u][v];
-                        diameterU = u;
-                        diameterV = v;
-                    }
                 }
 
                 inputPosition++;
@@ -87,8 +74,7 @@ class Diametro {
                 }
             }
 
-//          Loop principal do algoritmo de Floyd–Warshall, onde os caminhos mínimos são computados.
-//          O valor do diâmetro e os vértices diametrais são atualizados e a matriz de predecessores é preenchida simultaneamente.
+//          Loop principal do algoritmo de Floyd–Warshall, onde os caminhos mínimos são computados e a matriz de predecessores é preenchida.
 //          Custo O(v³)
             for (int k = 0; k < graph.length; k++) {
                 for (int i = 0; i < graph.length; i++) {
@@ -96,19 +82,25 @@ class Diametro {
                         if (graph[i][j] > graph[i][k] + graph[k][j]) {
                             graph[i][j] = graph[i][k] + graph[k][j];
                             path[i][j] = path[k][j];
-                            if (graph[i][j] > diameter) {
-                                diameter = graph[i][j];
-                                diameterU = i;
-                                diameterV = j;
-                            }
                         }
+                    }
+                }
+            }
+
+//          Verificação do diâmetro.
+//          Custo O(v²)
+            for (int u = 0; u < graph.length; u++) {
+                for (int v = 0; v < graph.length; v++) {
+                    if (graph[u][v] > diameter) {
+                        diameter = graph[u][v];
+                        diameterU = u;
+                        diameterV = v;
                     }
                 }
             }
 
 //          Reconstrução do caminho mínimo entre os vértices diametrais.
 //          Custo O(v)
-
             int du = diameterU;
             int dv = diameterV;
 
